@@ -6,6 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
+      - ASR_ENGINE=openai_whisper
       - ASR_MODEL=base
     ports:
       - "9000:9000"
