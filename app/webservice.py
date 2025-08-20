@@ -47,6 +47,18 @@ if path.exists(assets_path + "/swagger-ui.css") and path.exists(assets_path + "/
     applications.get_swagger_ui_html = swagger_monkey_patch
 
 
+@app.get("/info", tags=["Endpoints"])
+async def info():
+    """
+    Returns the ASR model information and configuration.
+    """
+    return {
+        "asr_engine": CONFIG.ASR_ENGINE,
+        "model_name": CONFIG.MODEL_NAME,
+        "model_quantization": CONFIG.MODEL_QUANTIZATION,
+    }
+
+
 @app.get("/", response_class=RedirectResponse, include_in_schema=False)
 async def index():
     return "/docs"
