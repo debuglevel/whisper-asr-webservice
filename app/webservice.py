@@ -115,6 +115,7 @@ async def asr(
         media_type="text/plain",
         headers={
             "Asr-Engine": CONFIG.ASR_ENGINE,
+            "Model-Name": CONFIG.MODEL_NAME,
             "Content-Disposition": f'attachment; filename="{quote(audio_file.filename)}.{output}"',
         },
     )
