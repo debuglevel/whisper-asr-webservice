@@ -49,6 +49,7 @@ if path.exists(assets_path + "/swagger-ui.css") and path.exists(assets_path + "/
 
 @app.get("/", response_class=RedirectResponse, include_in_schema=False)
 async def index():
+    print("GET request on /docs...")
     return "/docs"
 
 
@@ -88,24 +89,30 @@ async def asr(
     ),
     output: Union[str, None] = Query(default="txt", enum=["txt", "vtt", "srt", "tsv", "json"]),
 ):
-    result = asr_model.transcribe(
-        load_audio(audio_file.file, encode),
-        task,
-        language,
-        initial_prompt,
-        vad_filter,
-        word_timestamps,
-        {"diarize": diarize, "min_speakers": min_speakers, "max_speakers": max_speakers},
-        output,
-    )
-    return StreamingResponse(
-        result,
-        media_type="text/plain",
-        headers={
-            "Asr-Engine": CONFIG.ASR_ENGINE,
-            "Content-Disposition": f'attachment; filename="{quote(audio_file.filename)}.{output}"',
-        },
-    )
+    print("GET request on /asr...")
+    try:
+        result = asr_model.transcribe(
+            load_audio(audio_file.file, encode),
+            task,
+            language,
+            initial_prompt,
+            vad_filter,
+            word_timestamps,
+            {"diarize": diarize, "min_speakers": min_speakers, "max_speakers": max_speakers},
+            output,
+        )
+        print("GET request on /asr done.")
+        return StreamingResponse(
+            result,
+            media_type="text/plain",
+            headers={
+                "Asr-Engine": CONFIG.ASR_ENGINE,
+                "Content-Disposition": f'attachment; filename="{quote(audio_file.filename)}.{output}"',
+            },
+        )
+    except:
+        print("GET request on /asr failed.")
+        print(e)
 
 
 @app.post("/detect-language", tags=["Endpoints"])
@@ -113,6 +120,7 @@ async def detect_language(
     audio_file: UploadFile = File(...),  # noqa: B008
     encode: bool = Query(default=True, description="Encode audio first through FFmpeg"),
 ):
+    print("GET request on /detect-language...")
     detected_lang_code, confidence = asr_model.language_detection(load_audio(audio_file.file, encode))
     return {
         "detected_language": tokenizer.LANGUAGES[detected_lang_code],
@@ -142,4 +150,5 @@ def start(host: str, port: Optional[int] = None):
 
 
 if __name__ == "__main__":
+    print("Starting...")
     start()
