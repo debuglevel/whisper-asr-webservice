@@ -114,6 +114,7 @@ async def asr(
     print("GET request on /asr...")
     try:
         print(f"async_job: {async_job}")
+        print(f"vad_filter: {vad_filter}")
 
         if async_job:
             print("Creating an async job...")
