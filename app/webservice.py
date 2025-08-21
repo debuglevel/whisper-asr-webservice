@@ -116,6 +116,7 @@ async def asr(
         headers={
             "Asr-Engine": CONFIG.ASR_ENGINE,
             "Model-Name": CONFIG.MODEL_NAME,
+            "Model-Quantization": CONFIG.MODEL_QUANTIZATION,
             "Content-Disposition": f'attachment; filename="{quote(audio_file.filename)}.{output}"',
         },
     )
