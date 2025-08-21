@@ -113,7 +113,10 @@ async def asr(
 ):
     print("GET request on /asr...")
     try:
+        print(f"async_job: {async_job}")
+
         if async_job:
+            print("Creating an async job...")
             job_data = await async_svc.create_job(
                 [audio_file],
                 {
@@ -172,6 +175,7 @@ async def detect_language(
 
 @app.get("/asr/{job_id}", response_model_exclude_none=True, response_model=AsyncJobResponse, tags=["Endpoints"])
 async def get_job(job_id: str):
+    print("GET request on /asr/{job_id}...")
     return await async_svc.get_job(job_id)
 
 
