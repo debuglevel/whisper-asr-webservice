@@ -35,6 +35,7 @@ class FasterWhisperASR(ASRModel):
             options: Union[dict, None],
             output,
     ):
+        print("Transcribing audio with Faster Whisper...")
         self.last_activity_time = time.time()
 
         with self.model_lock:
@@ -53,9 +54,12 @@ class FasterWhisperASR(ASRModel):
         with self.model_lock:
             segments = []
             text = ""
+            print("transcribe()...")
             segment_generator, info = self.model.transcribe(audio, beam_size=5, **options_dict)
             for segment in segment_generator:
+                print("segments.append()...")
                 segments.append(segment)
+                print("segments.append() done")
                 text = text + segment.text
             result = {"language": options_dict.get("language", info.language), "segments": segments, "text": text}
 
@@ -63,6 +67,7 @@ class FasterWhisperASR(ASRModel):
         self.write_result(result, output_file, output)
         output_file.seek(0)
 
+        print("Transcribed audio with Faster Whisper successfully.")
         return output_file
 
     def language_detection(self, audio):

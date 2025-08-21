@@ -69,6 +69,7 @@ class ASRModel(ABC):
         """
         Unloads the model from memory and clears any cached GPU memory.
         """
+        print("Releasing ASR model...")
         del self.model
         torch.cuda.empty_cache()
         gc.collect()
